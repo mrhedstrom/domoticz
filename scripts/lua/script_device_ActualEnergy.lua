@@ -6,9 +6,9 @@
 --Name of the real energy counter
 energyCounter = 'Elförbrukning'
 --Name of the created dummy energy meter with the new actual value
-dummyEnergyMeter = 'Elförbrukning3'
+dummyEnergyMeter = 'Elförbrukning2'
 --ID of the created dummy energy meter with the new actual value
-dummyEnergyMeterid = 378
+dummyEnergyMeterid = 126
 
 commandArray = {}
 if devicechanged[energyCounter] then
