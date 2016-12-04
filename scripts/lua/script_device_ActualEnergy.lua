@@ -25,7 +25,7 @@ if devicechanged[energyCounter] then
 	--update dummy energy meter
 	commandArray[1] = {['UpdateDevice'] = dummyEnergyMeterid .. "|0|" .. actual .. ";" .. otherdevices_svalues[energyCounter]}
 	
-	print(dummyEnergyMeter .. ": " .. actual .. " W, " .. otherdevices_svalues[energyCounter] .. " kWh")
+	print(dummyEnergyMeter .. ": " .. actual .. " W, " .. otherdevices_svalues[energyCounter] .. " Wh")
 end
 
 return commandArray
