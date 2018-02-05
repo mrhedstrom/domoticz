@@ -19,7 +19,7 @@ if devicechanged[energyCounter] then
 		actual = 0
 	else
 		t = os.time{year=string.sub(s, 1, 4), month=string.sub(s, 6, 7), day=string.sub(s, 9, 10), hour=string.sub(s, 12, 13), min=string.sub(s, 15, 16), sec=string.sub(s, 18, 19)}
-		actual = (tonumber(otherdevices_svalues[energyCounter]) - tonumber(string.match(otherdevices_svalues[dummyEnergyMeter], "%d+%.*%d*;(%d+%.*%d*)")))/(os.difftime(os.time(), t)/3600)
+		actual = (tonumber(otherdevices_svalues[energyCounter]) - tonumber(string.match(otherdevices_svalues[dummyEnergyMeter], ";(%d+%.*%d*)")))/(os.difftime(os.time(), t)/3600)
 	end
 	
 	--update dummy energy meter
