@@ -14,12 +14,31 @@ commandArray = {}
 if devicechanged[energyCounter] then
 	--calculate new actual value
 	s = otherdevices_lastupdate[dummyEnergyMeter]
+	lastDummyCounter = string.match(otherdevices_svalues[dummyEnergyMeter], ";(.+)")
+	lastDummyCounterAsNumber = tonumber(lastDummyCounter)
+	lastCounterAsNumber = tonumber(otherdevices_svalues[energyCounter])
 	if s == nil then
 		print('First  time script is ever triggered. Update only counter. Actual value will be updated next time.')
 		actual = 0
+	elseif lastDummyCounter == nil or lastDummyCounter == '' or lastDummyCounterAsNumber == nil then
+		print('Error reading last value from dummy ' .. dummyEnergyMeter .. 
+			'. Got value ' .. lastDummyCounter .. ' from ' .. otherdevices_svalues[dummyEnergyMeter] ..
+			'. Actual value will be excluded this reading.')
+		actual = 0
+	elseif lastCounterAsNumber - lastDummyCounterAsNumber <= 0 then
+		print('Last reading is the same or less than this reading. ' ..
+			'Make sure the counter is being updated and make sure no other scripts are triggered on device: ' .. 
+			energyCounter .. '. Or just be happy that you energy consumption is zero.')
+		actual = 0
 	else
 		t = os.time{year=string.sub(s, 1, 4), month=string.sub(s, 6, 7), day=string.sub(s, 9, 10), hour=string.sub(s, 12, 13), min=string.sub(s, 15, 16), sec=string.sub(s, 18, 19)}
-		actual = (tonumber(otherdevices_svalues[energyCounter]) - tonumber(string.match(otherdevices_svalues[dummyEnergyMeter], ";(%d+%.*%d*)")))/(os.difftime(os.time(), t)/3600)
+		timeDiff = os.difftime(os.time(), t)
+		if timeDiff <=0 then
+			print('Error. Dummy device was just updated.')
+			actual = 0
+		else
+			actual = (lastCounterAsNumber - lastDummyCounterAsNumber)/(timeDiff/3600)
+		end
 	end
 	
 	--update dummy energy meter
