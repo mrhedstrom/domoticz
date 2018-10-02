@@ -7,12 +7,20 @@
 energyCounter = 'Elförbrukning'
 --Name of the created dummy energy meter with the new actual value
 dummyEnergyMeter = 'Elförbrukning2'
---ID of the created dummy energy meter with the new actual value
-dummyEnergyMeterid = 126
 
---Counter offset for dummy energy meter. Only use this for counters that differs from global setting for counter divider.
---To add one tenfold set this to 10. To remove one tenfold set to 1/10
-counterOffset=1
+--Counter divider offset for dummy energy meter. Only use this for counters that differs from global setting for counter divider.
+--To add one tenfold set this to 10
+--To remove one tenfold set to 1/10
+counterDividerOffset=1
+
+function getIdxByName(deviceName)
+	for name, idx in pairs(otherdevices_idx) do
+		if name == deviceName then
+			return idx
+		end
+	end
+	return 0
+end
 
 commandArray = {}
 if devicechanged[energyCounter] then
@@ -20,7 +28,7 @@ if devicechanged[energyCounter] then
 	s = otherdevices_lastupdate[dummyEnergyMeter]
 	lastDummyCounter = string.match(otherdevices_svalues[dummyEnergyMeter], ";(.+)")
 	lastDummyCounterAsNumber = tonumber(lastDummyCounter)
-	lastCounterAsNumber = counterOffset * tonumber(otherdevices_svalues[energyCounter])
+	lastCounterAsNumber = counterDividerOffset * tonumber(otherdevices_svalues[energyCounter])
 	actual = 0
 	if s == nil then
 		print('First  time script is ever triggered. Update only counter. Actual value will be updated next time.')
@@ -46,7 +54,7 @@ if devicechanged[energyCounter] then
 	end
 	
 	--update dummy energy meter
-	commandArray[1] = {['UpdateDevice'] = dummyEnergyMeterid .. "|0|" .. actual .. ";" .. lastCounterAsNumber}
+	commandArray[1] = {['UpdateDevice'] = getIdxByName(dummyEnergyMeter) .. "|0|" .. actual .. ";" .. lastCounterAsNumber}
 	
 	print(dummyEnergyMeter .. ": " .. actual .. " W, " .. lastCounterAsNumber .. " Wh")
 end
