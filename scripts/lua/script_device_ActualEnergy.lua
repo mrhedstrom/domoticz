@@ -1,6 +1,7 @@
 --Domoticz Script to get medium actual energy between energy counter readings and puts it on a dummy device
 
---First create a dummy energy meter.
+--First create one dummy energy meter. (Actual + Counter)
+--Edit the new device and set up "Energy read" to "From device" not "Computed"
 --Then enter the details below
 
 --Name of the real energy counter
@@ -19,6 +20,7 @@ function getIdxByName(deviceName)
 			return idx
 		end
 	end
+	print("Error: No device found with name " .. deviceName)
 	return 0
 end
 
