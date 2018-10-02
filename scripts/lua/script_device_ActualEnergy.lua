@@ -21,7 +21,7 @@ function getIdxByName(deviceName)
 		end
 	end
 	print("Error: No device found with name " .. deviceName)
-	return 0
+	return -1
 end
 
 commandArray = {}
