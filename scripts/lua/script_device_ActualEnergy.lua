@@ -30,7 +30,10 @@ if devicechanged[energyCounter] then
 	s = otherdevices_lastupdate[dummyEnergyMeter]
 	lastDummyCounter = string.match(otherdevices_svalues[dummyEnergyMeter], ";(.+)")
 	lastDummyCounterAsNumber = tonumber(lastDummyCounter)
-	lastCounterAsNumber = counterDividerOffset * tonumber(otherdevices_svalues[energyCounter])
+	lastCounterAsNumber = tonumber(otherdevices_svalues[energyCounter])
+	if lastCounterAsNumber != nil then
+		lastCounterAsNumber = counterDividerOffset * lastCounterAsNumber
+	end
 	actual = 0
 	if s == nil then
 		print('First  time script is ever triggered. Update only counter. Actual value will be updated next time.')
