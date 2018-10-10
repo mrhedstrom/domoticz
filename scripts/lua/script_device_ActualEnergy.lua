@@ -43,7 +43,7 @@ if devicechanged[energyCounter] then
 			'. Actual value will be excluded this reading.')
 	elseif lastCounterAsNumber == nil then
 		print('Error reading value from energy counter ' .. energyCounter ..
-			'. The type of the device is probebly not a counter or the device is missing.')
+			'. The type of the device is probably not a counter or the device is missing.')
 	elseif lastCounterAsNumber - lastDummyCounterAsNumber <= 0 then
 		print('Last reading is the same or less than this reading. ' ..
 			'Make sure the counter is being updated and make sure no other scripts are triggered on device: ' .. 
