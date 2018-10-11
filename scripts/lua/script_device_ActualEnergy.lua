@@ -14,16 +14,6 @@ dummyEnergyMeter = 'Elförbrukning2'
 --To remove one tenfold set to 1/10
 counterDividerOffset=1
 
-function getIdxByName(deviceName)
-	for name, idx in pairs(otherdevices_idx) do
-		if name == deviceName then
-			return idx
-		end
-	end
-	print("Error: No device found with name " .. deviceName)
-	return -1
-end
-
 commandArray = {}
 if devicechanged[energyCounter] then
 	--calculate new actual value
@@ -31,7 +21,10 @@ if devicechanged[energyCounter] then
 	lastDummyCounter = string.match(otherdevices_svalues[dummyEnergyMeter], ";(.+)")
 	lastDummyCounterAsNumber = tonumber(lastDummyCounter)
 	lastCounterAsNumber = tonumber(otherdevices_svalues[energyCounter])
-	if lastCounterAsNumber != nil then
+	if lastCounterAsNumber == nil then
+		lastCounterAsNumber = tonumber(string.match(otherdevices_svalues[energyCounter], ";(.+)"))
+	end
+	if not lastCounterAsNumber == nil then
 		lastCounterAsNumber = counterDividerOffset * lastCounterAsNumber
 	end
 	actual = 0
@@ -44,6 +37,7 @@ if devicechanged[energyCounter] then
 	elseif lastCounterAsNumber == nil then
 		print('Error reading value from energy counter ' .. energyCounter ..
 			'. The type of the device is probably not a counter or the device is missing.')
+			return commandArray
 	elseif lastCounterAsNumber - lastDummyCounterAsNumber <= 0 then
 		print('Last reading is the same or less than this reading. ' ..
 			'Make sure the counter is being updated and make sure no other scripts are triggered on device: ' .. 
@@ -59,7 +53,7 @@ if devicechanged[energyCounter] then
 	end
 	
 	--update dummy energy meter
-	commandArray[1] = {['UpdateDevice'] = getIdxByName(dummyEnergyMeter) .. "|0|" .. actual .. ";" .. lastCounterAsNumber}
+	commandArray[1] = {['UpdateDevice'] = otherdevices_idx[dummyEnergyMeter] .. "|0|" .. actual .. ";" .. lastCounterAsNumber}
 	
 	print(dummyEnergyMeter .. ": " .. actual .. " W, " .. lastCounterAsNumber .. " Wh")
 end
