@@ -24,9 +24,14 @@ if devicechanged[energyCounter] then
 	if lastCounterAsNumber == nil then
 		lastCounterAsNumber = tonumber(string.match(otherdevices_svalues[energyCounter], ";(.+)"))
 	end
-	if not lastCounterAsNumber == nil then
+	if lastCounterAsNumber == nil then
+		print('Error reading value from energy counter ' .. energyCounter ..
+			'. The type of the device is probably not a counter or the device is missing.')
+		return commandArray
+	else
 		lastCounterAsNumber = counterDividerOffset * lastCounterAsNumber
 	end
+	
 	actual = 0
 	if s == nil then
 		print('First  time script is ever triggered. Update only counter. Actual value will be updated next time.')
@@ -34,10 +39,6 @@ if devicechanged[energyCounter] then
 		print('Error reading last value from dummy ' .. dummyEnergyMeter .. 
 			'. Got value ' .. lastDummyCounter .. ' from ' .. otherdevices_svalues[dummyEnergyMeter] ..
 			'. Actual value will be excluded this reading.')
-	elseif lastCounterAsNumber == nil then
-		print('Error reading value from energy counter ' .. energyCounter ..
-			'. The type of the device is probably not a counter or the device is missing.')
-			return commandArray
 	elseif lastCounterAsNumber - lastDummyCounterAsNumber <= 0 then
 		print('Last reading is the same or less than this reading. ' ..
 			'Make sure the counter is being updated and make sure no other scripts are triggered on device: ' .. 
