@@ -14,6 +14,10 @@ dummyEnergyMeter = 'Elförbrukning2'
 --To remove one tenfold set to 1/10
 counterDividerOffset=1
 
+--Update with JSON to trigger event system for dummy device on update
+updateWithJSON=false
+domoticzPortNumber=8080
+
 commandArray = {}
 if devicechanged[energyCounter] then
 	--calculate new actual value
@@ -54,7 +58,11 @@ if devicechanged[energyCounter] then
 	end
 	
 	--update dummy energy meter
-	commandArray[1] = {['UpdateDevice'] = otherdevices_idx[dummyEnergyMeter] .. "|0|" .. actual .. ";" .. lastCounterAsNumber}
+	if updateWithJSON then
+		os.execute('curl "http://127.0.0.1:' .. domoticzPortNumber .. '/json.htm?type=command&param=udevice&idx=' .. otherdevices_idx[dummyEnergyMeter] .. '&nvalue=0&svalue=' .. actual .. ';' .. lastCounterAsNumber .. '"')
+	else
+		commandArray[1] = {['UpdateDevice'] = otherdevices_idx[dummyEnergyMeter] .. "|0|" .. actual .. ";" .. lastCounterAsNumber}
+	end
 	
 	print(dummyEnergyMeter .. ": " .. actual .. " W, " .. lastCounterAsNumber .. " Wh")
 end
